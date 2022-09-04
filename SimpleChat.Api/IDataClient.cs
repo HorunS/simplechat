@@ -12,7 +12,10 @@ namespace SimpleChat.Api
     {
         #region User
 
-        Task<User> CreateOrGetUser(string login);
+        Task<User> CreateUser(string login);
+
+        Task<User?> GetUser(string login);
+
 
         #endregion
 

@@ -5,8 +5,8 @@ namespace SimpleChat.Api.Managers
     // Manages users
     public interface IUserManager
     {
-        Task<User> GetUser(string login);
-
         Task<User> CreateUser(string login);
+
+        Task<User?> GetUser(string login);
     }
 }

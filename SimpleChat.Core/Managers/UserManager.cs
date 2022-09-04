@@ -1,4 +1,5 @@
-﻿using SimpleChat.Api.Managers;
+﻿using SimpleChat.Api;
+using SimpleChat.Api.Managers;
 using SimpleChat.Api.Models;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,29 @@ namespace SimpleChat.Core.Managers
 {
     public class UserManager : IUserManager
     {
-        public Task<User> CreateUser(string login)
+
+        private IDataClient _dataClient;
+
+        public UserManager(IDataClient dataClient)
         {
-            return Task.FromResult(new User(login));
+            _dataClient = dataClient;
         }
 
-        public Task<User> GetUser(string login)
+        public async Task<User> CreateUser(string login)
         {
-            throw new NotImplementedException();
+            var user = await _dataClient.GetUser(login);
+
+            if (user != null)
+            {
+                throw new ApplicationException($"User with login {login} alredy exists");
+            }
+
+            return await _dataClient.CreateUser(login);
+        }
+
+        public async Task<User?> GetUser(string login)
+        {
+            return await _dataClient.GetUser(login);
         }
     }
 }
