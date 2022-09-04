@@ -16,7 +16,7 @@ namespace SimpleChat.Core
 
         #region Users
 
-        public Task<User> CreateUser(string login)
+        public Task<string> CreateUser(string login)
         {
             lock (_lock)
             {
@@ -26,15 +26,23 @@ namespace SimpleChat.Core
                 }
 
                 var user = new User(login);
-                _users.Add(login, user);
+                var token = Guid.NewGuid().ToString();
 
-                return Task.FromResult(user);
+                _users.Add(token, user);
+
+                return Task.FromResult(token);
             }
         }
 
-        public Task<User?> GetUser(string login)
+        public Task<User?> GetUserByLogin(string login)
         {
-            return Task.FromResult(_users.TryGetValue(login, out var user) ? user : null);
+            var user = _users.FirstOrDefault(x => x.Value.Login == login).Value;
+            return Task.FromResult(user ?? null);
+        }
+
+        public Task<User?> GetUser(string token)
+        {
+            return Task.FromResult(_users.TryGetValue(token, out var user) ? user : null);
         }
 
         #endregion

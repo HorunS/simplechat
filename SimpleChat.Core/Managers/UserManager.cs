@@ -19,9 +19,9 @@ namespace SimpleChat.Core.Managers
             _dataClient = dataClient;
         }
 
-        public async Task<User> CreateUser(string login)
+        public async Task<string> CreateUser(string login)
         {
-            var user = await _dataClient.GetUser(login);
+            var user = await _dataClient.GetUserByLogin(login);
 
             if (user != null)
             {

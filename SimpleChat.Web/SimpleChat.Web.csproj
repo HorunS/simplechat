@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SimpleChat.Api\SimpleChat.Api.csproj" />
     <ProjectReference Include="..\SimpleChat.Core\SimpleChat.Core.csproj" />
     <ProjectReference Include="..\SimpleChat.Protocol\SimpleChat.Protocol.csproj" />

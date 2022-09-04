@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.IdentityModel.Tokens;
 using SimpleChat.Api.Managers;
 using SimpleChat.Protocol;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace SimpleChat.Web.Hubs
 {
+    
     public class SimpleChatHub : Hub
     {
         private IUserManager _userManager;
@@ -22,10 +28,11 @@ namespace SimpleChat.Web.Hubs
         {
             try
             {
-                await _userManager.CreateUser(login);
+                var token = await _userManager.CreateUser(login);
                 return new LoginResult
                 {
-                    Success = true
+                    Success = true,
+                    Token = token,
                 };
             }
             catch(Exception e)
