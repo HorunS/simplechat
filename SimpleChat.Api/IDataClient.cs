@@ -18,19 +18,17 @@ namespace SimpleChat.Api
 
         #region Room
 
-        Task<int> CreateRoom(int userId, string name);
+        Task<int> CreateRoom(string login, string name);
 
         Task<Room[]> GetRooms();
-
-        Task<Room> GetRoom(int roomId);
 
         #endregion
 
         #region Message
 
-        Task<int> CreateMessage(string text, int roomId, int authorId);
+        Task<int> CreateMessage(string text, string roomName, int authorLogin);
 
-        Task<Message> GetLastMessages(int roomId);
+        Task<Message> GetLastMessages(string roomName);
 
         #endregion
     }

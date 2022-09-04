@@ -10,10 +10,8 @@ namespace SimpleChat.Api.Managers
     // Manages rooms
     internal interface IRoomManager
     {
-        Task<int> CreateRoom(int userId, string name);
+        Task<string> CreateRoom(string ownerLogin, string name);
 
         Task<Room[]> GetRooms();
-
-        Task<Room> GetRoom(int roomId);
     }
 }

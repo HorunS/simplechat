@@ -10,8 +10,8 @@ namespace SimpleChat.Api.Managers
     // Manages messages
     internal interface IMessageManager
     {
-        Task<int> CreateMessage(string text, int roomId, int authorId);
+        Task<int> CreateMessage(string text, string roomName, string authorLogin);
 
-        Task<Message> GetLastMessages(int roomId);
+        Task<Message> GetLastMessages(string roomName);
     }
 }
