@@ -1,3 +1,5 @@
+using SimpleChat.Api.Managers;
+using SimpleChat.Core.Managers;
 using SimpleChat.Web.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,8 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-
 builder.Services.AddSignalR();
+builder.Services.AddTransient<IUserManager, UserManager>();
 
 var app = builder.Build();
 

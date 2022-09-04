@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using SimpleChat.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,16 @@ namespace SimpleChat.Client
         {
             _login = login;
             await _con.StartAsync();
+
+            try
+            {
+                await _con.InvokeAsync("Login", login);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public async Task SendMessage(string text)

@@ -6,4 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleChat.Api\SimpleChat.Api.csproj" />
+    <ProjectReference Include="..\SimpleChat.Core\SimpleChat.Core.csproj" />
+    <ProjectReference Include="..\SimpleChat.Protocol\SimpleChat.Protocol.csproj" />
+  </ItemGroup>
+
 </Project>
