@@ -1,12 +1,9 @@
 ﻿using SimpleChat.Client;
 
 var srv = new ChatService();
-await srv.Start("testuser");
 
-await srv.SendMessage("Hello again");
+var client = new Client(srv);
 
-
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+await client.Start();
 
 Console.ReadLine();

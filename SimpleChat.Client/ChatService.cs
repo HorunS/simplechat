@@ -10,45 +10,42 @@ namespace SimpleChat.Client
 {
     internal class ChatService
     {
-        private HubConnection _con;
+        private HubConnection? _con;
         private string token = string.Empty;
 
-
-        public ChatService()
+        public async Task<LoginResult> Login(string address, string login)
         {
             _con = new HubConnectionBuilder().
-                WithUrl("http://localhost:5001/chat").
+                WithUrl(address).
                 Build();
             _con.On<string, string>("ReceiveMessage", (user, message) => Console.WriteLine($"{user}:{message}"));
-        }
 
-        public async Task Start(string login)
-        {
             await _con.StartAsync();
 
             try
             {
                 var res = await _con.InvokeAsync<LoginResult>("Login", login);
-
-                if (!res.Success)
-                {
-                    Console.WriteLine("Failed to login");
-                }
-                else
+                if (res.Success)
                 {
                     token = res.Token;
                 }
+
+                return res;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                throw;
+                return new LoginResult
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Token = string.Empty,
+                };
             }
         }
 
         public async Task SendMessage(string text)
         {
-            await _con.InvokeAsync("SendMessage", token, text);
+            await _con!.InvokeAsync("SendMessage", token, text);
         }
     }
 }
