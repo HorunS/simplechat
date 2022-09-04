@@ -65,7 +65,6 @@ namespace SimpleChat.Web.Hubs
             }
         }
 
-
         public async Task<EnterRoomResult> EnterRoom(string token, string roomName)
         {
             var user = await _userManager.GetUser(token);
@@ -76,6 +75,8 @@ namespace SimpleChat.Web.Hubs
                 user.CurrentRoom = roomName;
 
                 await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+
+                await Clients.OthersInGroup(roomName).SendAsync("UserEnteredRoom", user.Login);
 
                 return new EnterRoomResult
                 {

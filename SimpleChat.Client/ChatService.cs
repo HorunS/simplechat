@@ -14,6 +14,7 @@ namespace SimpleChat.Client
         private string token = string.Empty;
 
         public event EventHandler<MessageReceivedEventArgs>? MessageReceived;
+        public event EventHandler<UserEnteredRoomEventArgs>? UserEnteredRoom;
 
         public async Task<LoginResult> Login(string address, string login)
         {
@@ -23,6 +24,10 @@ namespace SimpleChat.Client
             _con.On<string, string>(
                 "ReceiveMessage", 
                 (user, message) => MessageReceived?.Invoke(this, new MessageReceivedEventArgs(user, message)));
+
+            _con.On<string>(
+                "UserEnteredRoom",
+                (user) => UserEnteredRoom?.Invoke(this, new UserEnteredRoomEventArgs(user)));
 
             await _con.StartAsync();
 

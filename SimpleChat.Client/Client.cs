@@ -16,6 +16,7 @@ namespace SimpleChat.Client
         {
             _srv = srv;
             _srv.MessageReceived += _srv_MessageReceived;
+            _srv.UserEnteredRoom += _srv_UserEnteredRoom;
         }
 
         public async Task Start()
@@ -155,6 +156,11 @@ namespace SimpleChat.Client
         private void _srv_MessageReceived(object? sender, MessageReceivedEventArgs e)
         {
             Console.WriteLine($"[{e.UserName}]: {e.Message}");
+        }
+
+        private void _srv_UserEnteredRoom(object? sender, UserEnteredRoomEventArgs e)
+        {
+            Console.WriteLine($"[{e.UserName}] entered room");
         }
     }
 }
