@@ -58,6 +58,8 @@ namespace SimpleChat.Client
                     await HandleRoom(parts);
                     break;
                 case "/rooms":
+                    await HandleRoomsList(parts);
+                    break;
                 default:
                     break;
             }
@@ -106,11 +108,33 @@ namespace SimpleChat.Client
             if (res.Success)
             {
                 Console.WriteLine($"## You entered room {roomName}");
-                _loggedIn = true;
             }
             else
             {
                 Console.WriteLine($"## Failed to enter room {roomName}: {res.Message}");
+            }
+        }
+
+        private async Task HandleRoomsList(string[] commandParts)
+        {
+            if (commandParts.Length != 1)
+            {
+                Console.WriteLine("Bad command");
+                return;
+            }
+
+            var res = await _srv.ListRooms();
+            if (res.Success)
+            {
+                Console.WriteLine($"## Available rooms:");
+                for (int i = 0; i < res.Rooms!.Length; i++)
+                {
+                    Console.WriteLine(res.Rooms[i]);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"## Failed to get rooms list: {res.Message}");
             }
         }
 
@@ -121,7 +145,6 @@ namespace SimpleChat.Client
             if (res.Success)
             {
                 Console.WriteLine($"[You]: {message}");
-                _loggedIn = true;
             }
             else
             {

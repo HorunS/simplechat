@@ -5,8 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using SimpleChat.Api.Managers;
 using SimpleChat.Api.Models;
 using SimpleChat.Protocol;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace SimpleChat.Web.Hubs
 {
@@ -42,6 +40,31 @@ namespace SimpleChat.Web.Hubs
                 };
             }
         }
+
+        public async Task<ListRoomsResult> ListRooms(string token)
+        {
+            var user = await _userManager.GetUser(token);
+
+            if (user != null)
+            {
+                var rooms = await _roomManager.GetRooms();
+
+                return new ListRoomsResult
+                {
+                    Success = true,
+                    Rooms = rooms.Select(r => r.Name).ToArray(),
+                };
+            }
+            else
+            {
+                return new ListRoomsResult
+                {
+                    Success = false,
+                    Message = "User not found",
+                };
+            }
+        }
+
 
         public async Task<EnterRoomResult> EnterRoom(string token, string roomName)
         {

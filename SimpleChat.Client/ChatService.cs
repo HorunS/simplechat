@@ -47,6 +47,12 @@ namespace SimpleChat.Client
             }
         }
 
+
+        public async Task<ListRoomsResult> ListRooms()
+        {
+            return await _con!.InvokeAsync<ListRoomsResult>("ListRooms", token);
+        }
+
         public async Task<EnterRoomResult> EnterRoom(string roomName)
         {
             return await _con!.InvokeAsync<EnterRoomResult>("EnterRoom", token, roomName);
