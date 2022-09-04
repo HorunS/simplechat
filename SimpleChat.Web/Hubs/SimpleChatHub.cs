@@ -19,9 +19,14 @@ namespace SimpleChat.Web.Hubs
             _userManager = userManager;
         }
 
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string token, string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            var user = await _userManager.GetUser(token);
+
+            if (user != null)
+            {
+                await Clients.All.SendAsync("ReceiveMessage", user.Login, message);
+            }
         }
 
         public async Task<LoginResult> Login(string login)
