@@ -66,7 +66,7 @@ namespace SimpleChat.Web.Hubs
             };
         }
 
-        public async Task SendMessage(string token, string message)
+        public async Task<SendMessageResult> SendMessage(string token, string message)
         {
             var user = await _userManager.GetUser(token);
 
@@ -74,8 +74,28 @@ namespace SimpleChat.Web.Hubs
             {
                 if (user.CurrentRoom != null)
                 {
-                    await Clients.Group(user.CurrentRoom).SendAsync("ReceiveMessage", user.Login, message);
+                    await Clients.OthersInGroup(user.CurrentRoom).SendAsync("ReceiveMessage", user.Login, message);
+                    return new SendMessageResult
+                    {
+                        Success = true,
+                    };
                 }
+                else
+                {
+                    return new SendMessageResult
+                    {
+                        Success = false,
+                        Message = "You are not in room",
+                    };
+                }
+            }
+            else
+            {
+                return new SendMessageResult
+                {
+                    Success = false,
+                    Message = "User not found",
+                };
             }
         }
 

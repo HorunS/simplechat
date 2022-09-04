@@ -15,6 +15,7 @@ namespace SimpleChat.Client
         public Client(ChatService srv)
         {
             _srv = srv;
+            _srv.MessageReceived += _srv_MessageReceived;
         }
 
         public async Task Start()
@@ -31,6 +32,10 @@ namespace SimpleChat.Client
                     if (command.StartsWith('/'))
                     {
                         await HandleCommand(command);
+                    }
+                    else
+                    {
+                        await HandleChatMessage(command);
                     }
 
                 }
@@ -107,6 +112,26 @@ namespace SimpleChat.Client
             {
                 Console.WriteLine($"## Failed to enter room {roomName}: {res.Message}");
             }
+        }
+
+        private async Task HandleChatMessage(string message)
+        {
+            var res = await _srv.SendMessage(message);
+
+            if (res.Success)
+            {
+                Console.WriteLine($"[You]: {message}");
+                _loggedIn = true;
+            }
+            else
+            {
+                Console.WriteLine($"## Failed to send message: {res.Message}");
+            }
+        }
+
+        private void _srv_MessageReceived(object? sender, MessageReceivedEventArgs e)
+        {
+            Console.WriteLine($"[{e.UserName}]: {e.Message}");
         }
     }
 }

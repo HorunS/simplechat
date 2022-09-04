@@ -13,12 +13,16 @@ namespace SimpleChat.Client
         private HubConnection? _con;
         private string token = string.Empty;
 
+        public event EventHandler<MessageReceivedEventArgs>? MessageReceived;
+
         public async Task<LoginResult> Login(string address, string login)
         {
             _con = new HubConnectionBuilder().
                 WithUrl(address).
                 Build();
-            _con.On<string, string>("ReceiveMessage", (user, message) => Console.WriteLine($"{user}:{message}"));
+            _con.On<string, string>(
+                "ReceiveMessage", 
+                (user, message) => MessageReceived?.Invoke(this, new MessageReceivedEventArgs(user, message)));
 
             await _con.StartAsync();
 
@@ -48,9 +52,9 @@ namespace SimpleChat.Client
             return await _con!.InvokeAsync<EnterRoomResult>("EnterRoom", token, roomName);
         }
 
-        public async Task SendMessage(string text)
+        public async Task<SendMessageResult> SendMessage(string text)
         {
-            await _con!.InvokeAsync("SendMessage", token, text);
+            return await _con!.InvokeAsync<SendMessageResult>("SendMessage", token, text);
         }
     }
 }
