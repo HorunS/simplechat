@@ -43,6 +43,11 @@ namespace SimpleChat.Client
             }
         }
 
+        public async Task<EnterRoomResult> EnterRoom(string roomName)
+        {
+            return await _con!.InvokeAsync<EnterRoomResult>("EnterRoom", token, roomName);
+        }
+
         public async Task SendMessage(string text)
         {
             await _con!.InvokeAsync("SendMessage", token, text);

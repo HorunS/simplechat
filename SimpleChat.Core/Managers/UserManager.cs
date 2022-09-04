@@ -12,28 +12,40 @@ namespace SimpleChat.Core.Managers
     public class UserManager : IUserManager
     {
 
-        private IDataClient _dataClient;
+        //private IDataClient _dataClient;
 
-        public UserManager(IDataClient dataClient)
+        private Dictionary<string, User> _users = new Dictionary<string, User>();
+        private object _lock = new object();
+
+        public Task<string> CreateUser(string login)
         {
-            _dataClient = dataClient;
-        }
-
-        public async Task<string> CreateUser(string login)
-        {
-            var user = await _dataClient.GetUserByLogin(login);
-
-            if (user != null)
+            lock (_lock)
             {
-                throw new ApplicationException($"User with login {login} alredy exists");
-            }
+                var user = GetUserByLogin(login);
 
-            return await _dataClient.CreateUser(login);
+                if (user != null)
+                {
+                    throw new ApplicationException($"User with login {login} alredy exists");
+                }
+
+                user = new User(login);
+                var token = Guid.NewGuid().ToString();
+
+                _users.Add(token, user);
+
+                return Task.FromResult(token);
+            }
         }
 
-        public async Task<User?> GetUser(string login)
+        public Task<User?> GetUser(string token)
         {
-            return await _dataClient.GetUser(login);
+            return Task.FromResult(_users.TryGetValue(token, out var user) ? user : null);
+        }
+
+        private User? GetUserByLogin(string login)
+        {
+            var user = _users.FirstOrDefault(x => x.Value.Login == login).Value;
+            return user;
         }
     }
 }

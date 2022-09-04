@@ -10,6 +10,8 @@ namespace SimpleChat.Api.Models
     {
         public string Login { get; }
 
+        public string? CurrentRoom { get; set; }
+
         public User(string login)
         {
             Login = login;

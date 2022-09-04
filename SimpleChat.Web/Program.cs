@@ -12,8 +12,8 @@ using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTransient<IUserManager, UserManager>();
-builder.Services.AddSingleton<IDataClient, MemoryDataClient>();
+builder.Services.AddSingleton<IUserManager, UserManager>();
+builder.Services.AddSingleton<IRoomManager, RoomManager>();
 
 builder.Services.AddSignalR();
 

@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 namespace SimpleChat.Api.Managers
 {
     // Manages rooms
-    internal interface IRoomManager
+    public interface IRoomManager
     {
-        Task<string> CreateRoom(string ownerLogin, string name);
+        Task<Room> CreateRoomIfNotExist(string name);
 
         Task<Room[]> GetRooms();
+
+        Task<Room> GetRoom(string name);
+
     }
 }
