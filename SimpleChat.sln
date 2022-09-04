@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Core", "SimpleChat.Core\SimpleChat.Core.csproj", "{2E590C6C-5B91-4886-A26B-0CFD660240AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Api", "SimpleChat.Api\SimpleChat.Api.csproj", "{669709B3-2A5B-4E58-BC60-58CDBD8454A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Client", "SimpleChat.Client\SimpleChat.Client.csproj", "{B29E7DF6-C7E2-4F33-BE24-ED6371059EC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat.Web", "SimpleChat.Web\SimpleChat.Web.csproj", "{93B5BE3D-68B4-4AA4-8C92-4B8BDADD97B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E590C6C-5B91-4886-A26B-0CFD660240AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E590C6C-5B91-4886-A26B-0CFD660240AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E590C6C-5B91-4886-A26B-0CFD660240AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E590C6C-5B91-4886-A26B-0CFD660240AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{669709B3-2A5B-4E58-BC60-58CDBD8454A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{669709B3-2A5B-4E58-BC60-58CDBD8454A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{669709B3-2A5B-4E58-BC60-58CDBD8454A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{669709B3-2A5B-4E58-BC60-58CDBD8454A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B29E7DF6-C7E2-4F33-BE24-ED6371059EC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B29E7DF6-C7E2-4F33-BE24-ED6371059EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B29E7DF6-C7E2-4F33-BE24-ED6371059EC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B29E7DF6-C7E2-4F33-BE24-ED6371059EC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93B5BE3D-68B4-4AA4-8C92-4B8BDADD97B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93B5BE3D-68B4-4AA4-8C92-4B8BDADD97B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93B5BE3D-68B4-4AA4-8C92-4B8BDADD97B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93B5BE3D-68B4-4AA4-8C92-4B8BDADD97B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63E39414-C46A-417B-9A53-7D06C30D8233}
+	EndGlobalSection
+EndGlobal
