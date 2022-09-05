@@ -15,12 +15,14 @@ namespace SimpleChat.Client
     {
         private readonly ChatService _srv;
         private bool _loggedIn;
+        private bool _exited = false;
 
         public Client(ChatService srv)
         {
             _srv = srv;
             _srv.MessageReceived += _srv_MessageReceived;
             _srv.UserEnteredRoom += _srv_UserEnteredRoom;
+            _srv.ConnectionClosed += _srv_ConnectionClosed;
         }
 
         public async Task Start()
@@ -28,7 +30,7 @@ namespace SimpleChat.Client
             Console.WriteLine("Welcome to chat");
             Console.WriteLine("Type /help to see available commands");
 
-            while (true)
+            while (!_exited)
             {
                 var command = Console.ReadLine();
 
@@ -66,6 +68,7 @@ namespace SimpleChat.Client
                     await HandleRoomsList(parts);
                     break;
                 default:
+                    CH.WriteWarning($"Unknown command: {command}");
                     break;
             }
         }
@@ -73,20 +76,19 @@ namespace SimpleChat.Client
         private void HandleHelp()
         {
             CH.WriteText("/help - list of available commands");
-            CH.WriteText("/login [host]:[port] [login] - login to server. E.g. /login localhost:5001 myname");
+            CH.WriteText("/login [login] - login to server");
             CH.WriteText("/rooms - list of available rooms");
             CH.WriteText("/room [room] - enter orcreate specified room");
-            CH.WriteText("/exit - exit room");
         }
 
         private async Task HandleLogin(string[] commandParts)
         {
-            if (commandParts.Length != 3)
+            if (commandParts.Length != 2)
             {
                 CH.WriteError("Bad command");
                 return;
             }
-            var res = await _srv.Login($"http://{commandParts[1]}/chat", commandParts[2]);
+            var res = await _srv.Login($"https://localhost:5001/chat", commandParts[1]);
 
             if (res.Success)
             {
@@ -183,6 +185,12 @@ namespace SimpleChat.Client
         private void _srv_UserEnteredRoom(object? sender, UserEnteredRoomEventArgs e)
         {
             CH.WriteNotification($"[{e.UserName}] entered room");
+        }
+
+        private void _srv_ConnectionClosed(object? sender, ConnectionClosedEventArgs e)
+        {
+            CH.WriteError("Connection closed. Press <Enter> to exit");
+            _exited = true;
         }
     }
 }

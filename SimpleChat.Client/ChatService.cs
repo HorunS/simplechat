@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace SimpleChat.Client
 {
+    using CH = ConsoleHelper;
+
     internal class ChatService
     {
         private HubConnection? _con;
@@ -15,11 +17,13 @@ namespace SimpleChat.Client
 
         public event EventHandler<MessageReceivedEventArgs>? MessageReceived;
         public event EventHandler<UserEnteredRoomEventArgs>? UserEnteredRoom;
+        public event EventHandler<ConnectionClosedEventArgs>? ConnectionClosed;
 
         public async Task<LoginResult> Login(string address, string login)
         {
             _con = new HubConnectionBuilder().
                 WithUrl(address).
+                WithAutomaticReconnect().
                 Build();
             _con.On<string, string>(
                 "ReceiveMessage", 
@@ -28,6 +32,9 @@ namespace SimpleChat.Client
             _con.On<string>(
                 "UserEnteredRoom",
                 (user) => UserEnteredRoom?.Invoke(this, new UserEnteredRoomEventArgs(user)));
+
+            _con.Reconnecting += _con_Reconnecting;
+            _con.Closed += _con_Closed;
 
             await _con.StartAsync();
 
@@ -52,7 +59,6 @@ namespace SimpleChat.Client
             }
         }
 
-
         public async Task<ListRoomsResult> ListRooms()
         {
             return await _con!.InvokeAsync<ListRoomsResult>("ListRooms", token);
@@ -66,6 +72,20 @@ namespace SimpleChat.Client
         public async Task<SendMessageResult> SendMessage(string text)
         {
             return await _con!.InvokeAsync<SendMessageResult>("SendMessage", token, text);
+        }
+
+        private Task _con_Reconnecting(Exception? arg)
+        {
+            CH.WriteWarning("Connection to server has been lost. Reconnecting...");
+
+            return Task.CompletedTask;
+        }
+
+        private Task _con_Closed(Exception? arg)
+        {
+            ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs());
+
+            return Task.CompletedTask;
         }
     }
 }
