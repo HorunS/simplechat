@@ -5,8 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace SimpleChat.Client
 {
+
+    using CH = ConsoleHelper;
+
     internal class Client
     {
         private readonly ChatService _srv;
@@ -68,30 +72,30 @@ namespace SimpleChat.Client
 
         private void HandleHelp()
         {
-            Console.WriteLine("/help - list of available commands");
-            Console.WriteLine("/login [host]:[port] [login] - login to server. E.g. /login localhost:5001 myname");
-            Console.WriteLine("/rooms - list of available rooms");
-            Console.WriteLine("/room [room] - enter orcreate specified room");
-            Console.WriteLine("/exit - exit room");
+            CH.WriteText("/help - list of available commands");
+            CH.WriteText("/login [host]:[port] [login] - login to server. E.g. /login localhost:5001 myname");
+            CH.WriteText("/rooms - list of available rooms");
+            CH.WriteText("/room [room] - enter orcreate specified room");
+            CH.WriteText("/exit - exit room");
         }
 
         private async Task HandleLogin(string[] commandParts)
         {
             if (commandParts.Length != 3)
             {
-                Console.WriteLine("Bad command");
+                CH.WriteError("Bad command");
                 return;
             }
             var res = await _srv.Login($"http://{commandParts[1]}/chat", commandParts[2]);
 
             if (res.Success)
             {
-                Console.WriteLine("## Login successful");
+                CH.WriteNotification("Login successful");
                 _loggedIn = true;
             }
             else
             {
-                Console.WriteLine($"## Login failed: {res.Message}");
+                CH.WriteNotification($"Login failed: {res.Message}");
             }
         }
 
@@ -99,7 +103,13 @@ namespace SimpleChat.Client
         {
             if (commandParts.Length != 2)
             {
-                Console.WriteLine("Bad command");
+                CH.WriteError("Bad command");
+                return;
+            }
+
+            if (!_loggedIn)
+            {
+                CH.WriteError("You are not logged in");
                 return;
             }
 
@@ -108,11 +118,11 @@ namespace SimpleChat.Client
             var res = await _srv.EnterRoom(roomName);
             if (res.Success)
             {
-                Console.WriteLine($"## You entered room {roomName}");
+                CH.WriteNotification($"You entered room {roomName}");
             }
             else
             {
-                Console.WriteLine($"## Failed to enter room {roomName}: {res.Message}");
+                CH.WriteNotification($"## Failed to enter room {roomName}: {res.Message}");
             }
         }
 
@@ -120,47 +130,59 @@ namespace SimpleChat.Client
         {
             if (commandParts.Length != 1)
             {
-                Console.WriteLine("Bad command");
+                CH.WriteError("Bad command");
+                return;
+            }
+
+            if (!_loggedIn)
+            {
+                CH.WriteError("You are not logged in");
                 return;
             }
 
             var res = await _srv.ListRooms();
             if (res.Success)
             {
-                Console.WriteLine($"## Available rooms:");
+                CH.WriteNotification("Available rooms:");
                 for (int i = 0; i < res.Rooms!.Length; i++)
                 {
-                    Console.WriteLine(res.Rooms[i]);
+                    CH.WriteText(res.Rooms[i]);
                 }
             }
             else
             {
-                Console.WriteLine($"## Failed to get rooms list: {res.Message}");
+               CH.WriteNotification($"Failed to get rooms list: {res.Message}");
             }
         }
 
         private async Task HandleChatMessage(string message)
         {
+            if (!_loggedIn)
+            {
+                CH.WriteError("You are not logged in");
+                return;
+            }
+
             var res = await _srv.SendMessage(message);
 
             if (res.Success)
             {
-                Console.WriteLine($"[You]: {message}");
+                CH.WriteMessage("you", message);
             }
             else
             {
-                Console.WriteLine($"## Failed to send message: {res.Message}");
+                CH.WriteNotification($"Failed to send message: {res.Message}");
             }
         }
 
         private void _srv_MessageReceived(object? sender, MessageReceivedEventArgs e)
         {
-            Console.WriteLine($"[{e.UserName}]: {e.Message}");
+            CH.WriteMessage(e.UserName, e.Message);
         }
 
         private void _srv_UserEnteredRoom(object? sender, UserEnteredRoomEventArgs e)
         {
-            Console.WriteLine($"[{e.UserName}] entered room");
+            CH.WriteNotification($"[{e.UserName}] entered room");
         }
     }
 }
